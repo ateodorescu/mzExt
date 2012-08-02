@@ -1,0 +1,34 @@
+h1. Plugins and Extensions for Extjs 4.x
+
+h2. Ext.ux.form.field.CodeMirror.411
+
+!http://ateodorescu.github.com/mzExt/images/Ext.ux.form.field.CodeMirror.png!
+
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/codemirror/index_411.html
+Forum: "Link":http://www.sencha.com/forum/showthread.php?167047-Ext.ux.form.field.CodeMirror-for-Ext-4.x
+
+h2. Ext.ux.form.field.CodeMirror.407
+
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/codemirror/index_407.html
+Forum: "Link":http://www.sencha.com/forum/showthread.php?167047-Ext.ux.form.field.CodeMirror-for-Ext-4.x
+
+h2. Ext.ux.form.field.UploadFileField
+
+!http://ateodorescu.github.com/mzExt/images/Ext.ux.form.field.UploadFileField.png!
+
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/uploadfile/index.html
+Forum: "Link":http://www.sencha.com/forum/showthread.php?206076-Ext.ux.form.field.UploadFileField-and-Ext.ux.form.field.ImageFileField&highlight=Ext.ux.form.field.ImageFileField
+
+h2. Ext.ux.form.field.ImageFileField
+
+!http://ateodorescu.github.com/mzExt/images/Ext.ux.form.field.ImageFileField.png!
+
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/imageupload/index.html
+Forum: "Link":http://www.sencha.com/forum/showthread.php?206076-Ext.ux.form.field.UploadFileField-and-Ext.ux.form.field.ImageFileField&highlight=Ext.ux.form.field.ImageFileField
+
+h2. Ext.ux.form.plugin.HtmlEditor
+
+!http://ateodorescu.github.com/mzExt/images/Ext.ux.form.plugin.HtmlEditor.png!
+
+Demo: "Link":http://ateodorescu.github.com/mzExt/example/htmleditor/index.html
+Forum: "Link":http://www.sencha.com/forum/showthread.php?183024-Ext.ux.form.plugin.HtmlEditor

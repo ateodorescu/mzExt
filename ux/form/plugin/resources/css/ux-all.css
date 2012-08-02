@@ -1,0 +1,76 @@
+/* Ext.ux.form.plugins.HtmlEditor */
+.x-html-editor-tb .x-edit-removehtml, .x-menu-item img.x-edit-removehtml {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: 0 0;
+}
+.x-html-editor-tb .x-edit-removeformat, .x-menu-item img.x-edit-removeformat {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -16px 0;
+}
+.x-html-editor-tb .x-edit-inserttable, .x-menu-item img.x-edit-inserttable {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -32px 0;
+}
+.x-html-editor-tb .x-edit-indent, .x-menu-item img.x-edit-indent {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -48px 0;
+}
+.x-html-editor-tb .x-edit-outdent, .x-menu-item img.x-edit-outdent {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -64px 0;
+}
+.x-html-editor-tb .x-edit-superscript, .x-menu-item img.x-edit-superscript {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -80px 0;
+}
+.x-html-editor-tb .x-edit-subscript, .x-menu-item img.x-edit-subscript {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -96px 0;
+}
+.x-html-editor-tb .x-edit-inserthorizontalrule, .x-menu-item img.x-edit-inserthorizontalrule {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -112px 0;
+}
+.x-html-editor-tb .x-edit-chars, .x-menu-item img.x-edit-chars {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -128px 0;
+}
+.x-html-editor-tb .x-edit-wordpaste, .x-menu-item img.x-edit-wordpaste {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -144px 0;
+}
+.x-html-editor-tb .x-edit-images, .x-menu-item img.x-edit-images {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -160px 0;
+}
+.x-html-editor-tb .x-edit-undo, .x-menu-item img.x-edit-undo {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -176px 0;
+}
+.x-html-editor-tb .x-edit-redo, .x-menu-item img.x-edit-redo {
+    background-image: url("../../resources/themes/images/default/editor/tb-plugins.gif");
+    background-position: -192px 0;
+}
+
+.char-item {
+    float: left; 
+    border: 1px solid #99BBE8; 
+    margin: 3px; 
+    text-align: center; 
+    vertical-align: middle; 
+    width: 20px; 
+    height: 20px; 
+    font-size: 14px;
+    color: #15428B;
+    cursor: pointer;
+}
+
+.char-item.x-item-selected {
+    background-color: #777;
+}
+
+.char-over {
+    border: 1px solid #15428B;
+    background-color:#d0def0;
+}
+
