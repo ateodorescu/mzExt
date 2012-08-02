@@ -30,5 +30,5 @@ h2. Ext.ux.form.plugin.HtmlEditor
 
 !http://ateodorescu.github.com/mzExt/images/Ext.ux.form.plugin.HtmlEditor.png!
 
-Demo: "Link":http://ateodorescu.github.com/mzExt/example/htmleditor/index.html
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/htmleditor/index.html
 Forum: "Link":http://www.sencha.com/forum/showthread.php?183024-Ext.ux.form.plugin.HtmlEditor
