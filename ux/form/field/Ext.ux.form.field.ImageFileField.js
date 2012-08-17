@@ -29,7 +29,12 @@ Ext.define('Ext.ux.layout.component.field.ImageFileField', {
 * @extends Ext.form.field.File
 * @author Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
+* @license [MIT][1]
+* 
 * @version 1.0
+* 
+* [1]: http://www.mzsolutions.eu/extjs/license.txt
+* 
 * 
 * Provides an image upload field component for Sencha. The field allows you to preview the image that was previously uploaded.
 * The component works with Extjs 4.0.7 and 4.1.0.

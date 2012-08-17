@@ -28,7 +28,12 @@ Ext.define('Ext.ux.layout.component.field.UploadFileField', {
 * @extends Ext.form.field.File
 * @author Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
+* @license [MIT][1]
+* 
 * @version 1.0
+* 
+* [1]: http://www.mzsolutions.eu/extjs/license.txt
+* 
 * 
 * Provides a "delete" button to the file upload component. If the "delete" button is pressed the component behaves like a 
 * textfield sending the value "delete" to the server. This is useful when you want to delete the uploaded file.
