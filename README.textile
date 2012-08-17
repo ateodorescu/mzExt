@@ -4,11 +4,13 @@ h2. Ext.ux.form.field.CodeMirror.411
 
 !http://ateodorescu.github.com/mzExt/images/Ext.ux.form.field.CodeMirror.png!
 
+License: MIT
 Demo: "Link":http://ateodorescu.github.com/mzExt/examples/codemirror/index_411.html
 Forum: "Link":http://www.sencha.com/forum/showthread.php?167047-Ext.ux.form.field.CodeMirror-for-Ext-4.x
 
 h2. Ext.ux.form.field.CodeMirror.407
 
+License: MIT
 Demo: "Link":http://ateodorescu.github.com/mzExt/examples/codemirror/index_407.html
 Forum: "Link":http://www.sencha.com/forum/showthread.php?167047-Ext.ux.form.field.CodeMirror-for-Ext-4.x
 
@@ -16,6 +18,7 @@ h2. Ext.ux.form.field.UploadFileField
 
 !http://ateodorescu.github.com/mzExt/images/Ext.ux.form.field.UploadFileField.png!
 
+License: MIT
 Demo: "Link":http://ateodorescu.github.com/mzExt/examples/uploadfile/index.html
 Forum: "Link":http://www.sencha.com/forum/showthread.php?206076-Ext.ux.form.field.UploadFileField-and-Ext.ux.form.field.ImageFileField&highlight=Ext.ux.form.field.ImageFileField
 
@@ -23,6 +26,7 @@ h2. Ext.ux.form.field.ImageFileField
 
 !http://ateodorescu.github.com/mzExt/images/Ext.ux.form.field.ImageFileField.png!
 
+License: MIT
 Demo: "Link":http://ateodorescu.github.com/mzExt/examples/imageupload/index.html
 Forum: "Link":http://www.sencha.com/forum/showthread.php?206076-Ext.ux.form.field.UploadFileField-and-Ext.ux.form.field.ImageFileField&highlight=Ext.ux.form.field.ImageFileField
 
@@ -30,5 +34,14 @@ h2. Ext.ux.form.plugin.HtmlEditor
 
 !http://ateodorescu.github.com/mzExt/images/Ext.ux.form.plugin.HtmlEditor.png!
 
-Demo: "Link":http://ateodorescu.github.com/mzExt/example/htmleditor/index.html
+License: MIT
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/htmleditor/index.html
 Forum: "Link":http://www.sencha.com/forum/showthread.php?183024-Ext.ux.form.plugin.HtmlEditor
+
+h2. Ext.ux.grid.mzPivotGrid
+
+!http://ateodorescu.github.com/mzExt/images/Ext.ux.grid.mzPivotGrid.png!
+
+License: GPLv3 & commercial
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/pivotgrid/index.html
+Forum: "Link":http://www.sencha.com/forum/showthread.php?237492-Ext.ux.grid.mzPivotGrid
