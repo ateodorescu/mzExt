@@ -85,12 +85,16 @@ Ext.define('Ext.ux.layout.component.field.CodeMirror', {
 * @extends Ext.form.field.Base
 * @author Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
+* @license [MIT][1]
+* 
 * @version 1.1
 * 
-* Provides a [CodeMirror][1] component wrapper for Sencha. The supported and tested CodeMirror versions are 2.2, 2.3 and 2.4.
+* 
+* Provides a [CodeMirror][2] component wrapper for Sencha. The supported and tested CodeMirror versions are 2.2, 2.3 and 2.4.
 * The component works with Extjs 4.0.7.
 * 
-* [1]: http://codemirror.net/
+* [1]: http://www.mzsolutions.eu/extjs/license.txt
+* [2]: http://codemirror.net/
 * 
 * 
 * The editor's toolbar buttons have tooltips defined in the {@link #buttonTips} property, but they are not

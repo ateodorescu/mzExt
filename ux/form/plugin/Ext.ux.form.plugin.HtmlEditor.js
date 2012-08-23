@@ -2,12 +2,16 @@
 * @class Ext.ux.form.plugin.HtmlEditor
 * @author Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
-* @version 1.1
+* @license [MIT][1]
 * 
-* Provides plugins for the HtmlEditor. Many thanks to [Shea Frederick][1] as I was inspired by his [work][2].
+* @version 1.2
 * 
-* [1]: http://www.vinylfox.com
-* [2]: http://www.vinylfox.com/plugin-set-for-additional-extjs-htmleditor-buttons/
+* 
+* Provides plugins for the HtmlEditor. Many thanks to [Shea Frederick][2] as I was inspired by his [work][3].
+* 
+* [1]: http://www.mzsolutions.eu/extjs/license.txt
+* [2]: http://www.vinylfox.com
+* [3]: http://www.vinylfox.com/plugin-set-for-additional-extjs-htmleditor-buttons/
 * 
 * The plugin buttons have tooltips defined in the {@link #buttonTips} property, but they are not
 * enabled by default unless the global {@link Ext.tip.QuickTipManager} singleton is {@link Ext.tip.QuickTipManager#init initialized}.
@@ -104,10 +108,15 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
     * @cfg {Boolean} defaultFormatBlock Set the default block format.
     */
     defaultFormatBlock:     'p',
-    
+    /**
+    * @cfg {Boolean} enableNewToolbar Should we create a new toolbar or use the existing one?
+    */
+    enableNewToolbar:       false,
+
     enableInsertTable:      false,
     
     wordPasteEnabled:       false,
+    toolbar:                null,
     
     /**
      * @cfg {Array} specialChars
@@ -194,9 +203,10 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
                     Ext.Component.superclass.onEnable.apply(this, arguments);
                 }
             });
-
+            if(!me.enableNewToolbar){
+                items.push('-');
+            };
             items.push(
-                '-',
                 formatBlockSelectItem
             );
         }
@@ -239,11 +249,20 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
             me.wordPasteEnabled = false;
         }
         
-        /*if(me.enableImages){
-            items.push(btn('images', false, me.doImages));
-        }*/
         if(items.length > 0){
-            me.editor.getToolbar().add(items);
+            if(me.enableNewToolbar){
+                //me.tt = me.editor.getToolbar().getEl().wrap({tag: 'div'});
+                me.toolbar = new Ext.Toolbar({
+                    renderTo:           me.editor.getToolbar().getEl(),
+                    border:             false,
+                    enableOverflow:     true,
+                    cls:                'x-html-editor-tb'
+                });
+                //me.editor.toolbar = tt;
+                //me.toolbar.removeCls(['x-toolbar', 'x-toolbar-default', 'x-box-layout-ct']);
+            }
+            me.getToolbar().add(items);
+            
             fn = Ext.Function.bind(me.onEditorEvent, me);
             Ext.EventManager.on(me.editor.getDoc(), {
                 mousedown: fn,
@@ -263,6 +282,10 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
             }
             
         }
+    },
+    
+    getToolbar: function(){
+        return this.enableNewToolbar ? this.toolbar : this.editor.getToolbar();
     },
     
     onEditorEvent: function(e){
@@ -296,7 +319,7 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
             return;
         }
         
-        btns = me.editor.getToolbar().items.map;
+        btns = me.getToolbar().items.map;
         doc = me.editor.getDoc();
         
         function updateButtons() {
@@ -582,6 +605,16 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
 *   The default behaviour was to insert <br> tags when Enter was pressed. We have to let the browser insert a new paragraph
 *	to be able to change the format.
 */
+Ext.override(Ext.form.field.HtmlEditor, {
+    /*childEls: [
+        'iframeEl', 'textareaEl', 'toolbarsEl'
+    ],
+    initRenderData: function() {
+        this.beforeSubTpl = '<div class="' + this.editorWrapCls + '"><div id="{id}-toolbarsEl">' + Ext.DomHelper.markup(this.toolbar.getRenderTree()) + '</div>';
+        return Ext.applyIf(Ext.Component.superclass.initRenderData(), this.getLabelableRenderData());
+    }*/
+});
+
 if(Ext.isIE || Ext.isWebKit){
     Ext.override(Ext.form.field.HtmlEditor, {
         fixKeys: function() { 
