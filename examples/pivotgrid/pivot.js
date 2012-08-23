@@ -6,6 +6,7 @@ Ext.onReady(function() {
         title:          'Pivot grid',
         height:         300,
         width:          600,
+        enableLocking:  false,
         viewConfig: {
             trackOver:      true,
             stripeRows:     false
@@ -21,7 +22,7 @@ Ext.onReady(function() {
         store:  new Ext.data.ArrayStore({
             proxy: {
                 type:       'ajax',
-                url:        'countries.json',
+                url:        'pivot.json',
                 reader: {
                     type:       'array'
                 }

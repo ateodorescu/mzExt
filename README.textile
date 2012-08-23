@@ -43,5 +43,6 @@ h2. Ext.ux.grid.mzPivotGrid
 !http://ateodorescu.github.com/mzExt/images/Ext.ux.grid.mzPivotGrid.png!
 
 License: GPLv3 & commercial
-Demo: "Link":http://ateodorescu.github.com/mzExt/examples/pivotgrid/index.html
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/pivotgrid/pivot.html
+Demo with summary feature: "Link":http://ateodorescu.github.com/mzExt/examples/pivotgrid/summary.html
 Forum: "Link":http://www.sencha.com/forum/showthread.php?237492-Ext.ux.grid.mzPivotGrid
