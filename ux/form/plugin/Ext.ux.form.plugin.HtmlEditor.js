@@ -4,7 +4,7 @@
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @license [MIT][1]
 * 
-* @version 1.2
+* @version 1.3
 * 
 * 
 * Provides plugins for the HtmlEditor. Many thanks to [Shea Frederick][2] as I was inspired by his [work][3].
@@ -16,6 +16,9 @@
 * The plugin buttons have tooltips defined in the {@link #buttonTips} property, but they are not
 * enabled by default unless the global {@link Ext.tip.QuickTipManager} singleton is {@link Ext.tip.QuickTipManager#init initialized}.
 *
+* Changelog:
+* 
+* 28.08.2012 - v1.3 - Benedikt Elser <boun@gmx.de> - Resurrect the table plugin.
 * 
 * 
 #Example usage:#
@@ -64,6 +67,11 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
         'Ext.form.field.HtmlEditor'
     ],
     
+    /**
+     * @cfg {Array} tableBorderOptions
+     * A nested array of value/display options to present to the user for table border style. Defaults to a simple list of 5 varrying border types.
+     */
+    tableBorderOptions: [['none', 'None'], ['1px solid #000', 'Sold Thin'], ['2px solid #000', 'Solid Thick'], ['1px dashed #000', 'Dashed'], ['1px dotted #000', 'Dotted']],
     /**
     * @cfg {Boolean} enableAll Enable all available plugins
     */
@@ -222,10 +230,10 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
             items.push(btn('undo', false));
             items.push(btn('redo', false));
         }
-        /*if(me.enableInsertTable || me.enableAll){
+        if(me.enableInsertTable || me.enableAll){
             items.push('-');
             items.push(btn('inserttable', false, me.doInsertTable));
-        }*/
+        }
         if(me.enableIndenting || me.enableAll){
             items.push('-');
             items.push(btn('indent', false));
@@ -350,9 +358,112 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
             me.editor.setValue(tmp.textContent||tmp.innerText);
         }, 10, this);
     },
-    
+
     doInsertTable: function(){
-        
+		// Table language text
+		var langTitle       = 'Insert Table';
+		var langInsert      = 'Insert';
+		var langCancel      = 'Cancel';
+		var langRows        = 'Rows';
+		var langColumns     = 'Columns';
+		var langBorder      = 'Border';
+		var langCellLabel   = 'Label Cells';
+		var showCellLocationText = false;
+
+		if (!this.tableWindow){
+		    this.tableWindow = new Ext.Window({
+		        title: langTitle,
+		        closeAction: 'hide',
+		        width: '335px',
+		        items: [{
+		            itemId: 'insert-table',
+		            xtype: 'form',
+		            border: false,
+		            plain: true,
+		            bodyStyle: 'padding: 10px;',
+		            labelWidth: '65px',
+		            labelAlign: 'right',
+		            items: [{
+		                xtype: 'numberfield',
+		                allowBlank: false,
+		                allowDecimals: false,
+		                fieldLabel: langRows,
+		                name: 'row',
+		                width: '30px'
+		            }, {
+		                xtype: 'numberfield',
+		                allowBlank: false,
+		                allowDecimals: false,
+		                fieldLabel: langColumns,
+		                name: 'col',
+		                width: '30px'
+		            }, {
+		                xtype: 'combo',
+		                fieldLabel: langBorder,
+		                name: 'border',
+		                forceSelection: true,
+		                mode: 'local',
+		                store: new Ext.data.ArrayStore({
+		                    autoDestroy: true,
+		                    fields: ['spec', 'val'],
+		                    data: this.tableBorderOptions
+		                }),
+		                triggerAction: 'all',
+		                value: 'none',
+		                displayField: 'val',
+		                valueField: 'spec',
+		                anchor: '-15'
+		            }]
+		        }],
+				buttons: [{
+				    text: langInsert,
+				    handler: function(){
+				        var frm = this.tableWindow.getComponent('insert-table').getForm();
+				        if (frm.isValid()) {
+				            var border = frm.findField('border').getValue();
+				            var rowcol = [frm.findField('row').getValue(), frm.findField('col').getValue()];
+				            if (rowcol.length == 2 && rowcol[0] > 0 && rowcol[1] > 0) {
+				                var colwidth = Math.floor(100/rowcol[0]);
+				                var html = "<table style='border-collapse: collapse'>";
+				                var cellText = '&nbsp;';
+				                for (var row = 0; row < rowcol[0]; row++) {
+				                    html += "<tr>";
+				                    for (var col = 0; col < rowcol[1]; col++) {
+				                        html += "<td width='" + colwidth + "%' style='border: " + border + ";'>" + cellText + "</td>";
+				                    }
+				                    html += "</tr>";
+				                }
+				                html += "</table>";
+
+								// Workaround, if the editor is currently not in focus
+                                var before = this.editor.getValue();
+                                this.editor.insertAtCursor(html);
+                                var after = this.editor.getValue();
+                                if (before==after) {       
+                                    this.editor.setValue(before+html);
+                                }
+				            }
+				            this.tableWindow.hide();
+				        } else {
+				            if (!frm.findField('row').isValid()){
+				                frm.findField('row').getEl().frame();
+				            } else if (!frm.findField('col').isValid()){
+				                frm.findField('col').getEl().frame();
+				            }
+				        }
+				    },
+				    scope: this
+				}, {
+				    text: langCancel,
+				    handler: function(){
+				        this.tableWindow.hide();
+				    },
+				    scope: this
+				}]
+		    }).show();
+		} else {
+			this.tableWindow.show();
+		}
     },
     
     doSpecialChars: function(){
@@ -371,7 +482,7 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
         });
         this.charWindow = Ext.create('Ext.Window', {
             title:          this.buttonTips.chars.text,
-            width:          436,
+            width:          '436px',
             autoHeight:     true,
             modal:          true,
             layout:         'fit',
