@@ -6,7 +6,8 @@ Ext.onReady(function() {
         title:          'Pivot grid',
         height:         300,
         width:          600,
-        enableLocking:  false,
+        enableLocking:  true,
+        enableGrouping: true,
         viewConfig: {
             trackOver:      true,
             stripeRows:     false
@@ -16,7 +17,7 @@ Ext.onReady(function() {
             xtype:  'button',
             text:   'refresh',
             handler: function(){
-                grid.getStore().load();
+                grid.refresh();
             }
         }],
         store:  new Ext.data.ArrayStore({
@@ -53,16 +54,19 @@ Ext.onReady(function() {
         leftAxis: [{
             width:      90,
             dataIndex:  'region',
-            header:     'Region'
+            header:     'Region',
+            direction:  'ASC'
         },{
             width:      90,
             dataIndex:  'economy',
-            header:     'Country'
+            header:     'Country',
+            direction:  'DESC'
         }],
         
         topAxis: [{
             dataIndex:  'year',
-            width:      80
+            width:      80,
+            direction:  'DESC'
         }]
     });
 

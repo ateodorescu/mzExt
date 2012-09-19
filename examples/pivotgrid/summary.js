@@ -63,8 +63,9 @@ Ext.onReady(function() {
             header:     'Product'
         },{
             width:      90,
-            dataIndex:  'quarter',
-            header:     'Quarter'
+            dataIndex:  'month',
+            header:     'Quarter',
+            direction:  'DESC'
         }],
         
         topAxis: [{
