@@ -48,6 +48,19 @@ Ext.onReady(function() {
             trackOver:      true,
             stripeRows:     false
         },
+        tbar: [{
+            xtype:  'button',
+            text:   'Expand all',
+            handler: function(){
+                pivotGrid.expandAll();
+            }
+        },{
+            xtype:  'button',
+            text:   'Collapse all',
+            handler: function(){
+                pivotGrid.collapseAll();
+            }
+        }],
         features: [featureSummary],
         aggregate: [{
             measure:    'value',
