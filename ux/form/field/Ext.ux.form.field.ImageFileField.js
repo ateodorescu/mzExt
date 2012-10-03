@@ -13,6 +13,15 @@ Ext.define('Ext.ux.layout.component.field.ImageFileField', {
 
     type: 'imagefield',
 
+    publishInnerWidth: function (ownerContext, width) {
+        var me = this,
+            owner = me.owner;
+        
+        owner.browseButtonWrap.setWidth(owner.buttonEl.getWidth() + owner.buttonMargin + owner.buttonDelete.getWidth() + owner.buttonDeleteMargin + owner.buttonPreview.getWidth() + owner.buttonPreviewMargin);
+        owner.buttonDelete.setHeight(owner.buttonEl.getHeight());
+        owner.buttonPreview.setHeight(owner.buttonEl.getHeight());
+    },
+    
     sizeBodyContents: function(width, height) {
         var me = this,
             owner = me.owner;
@@ -26,18 +35,25 @@ Ext.define('Ext.ux.layout.component.field.ImageFileField', {
 
 /**
 * @class Ext.ux.form.field.ImageFileField
-* @extends Ext.form.field.File
+* @extends Ext.ux.form.field.UploadFileField
 * @author Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @license [MIT][1]
 * 
-* @version 1.0
+* @version 1.2
 * 
 * [1]: http://www.mzsolutions.eu/extjs/license.txt
 * 
 * 
 * Provides an image upload field component for Sencha. The field allows you to preview the image that was previously uploaded.
-* The component works with Extjs 4.0.7 and 4.1.0.
+* The component works with Extjs > 4.0.7 and < 4.1.1.
+* 
+* ### Changelog:
+* 
+* #### 03.10.2012 - v1.2
+* 
+* - if the delete button is pressed then disable preview
+* - if the field is readOnly then disable "delete" and "browse" buttons
 * 
 * 
 #Example usage:#
@@ -61,8 +77,6 @@ Ext.define('Ext.ux.layout.component.field.ImageFileField', {
         }]
     }); 
 
-* @markdown
-* @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 */
 Ext.define('Ext.ux.form.field.ImageFileField', {
     extend: 'Ext.ux.form.field.UploadFileField',
@@ -91,9 +105,32 @@ Ext.define('Ext.ux.form.field.ImageFileField', {
         if(!Ext.isEmpty(me.getValue())){
             me.buttonPreview.enable();
         }
-        if(me.browseButtonWrap){
-            me.browseButtonWrap.dom.style.width = me.buttonEl.getWidth() + me.buttonMargin + me.buttonDelete.getWidth() + me.buttonDeleteMargin + me.buttonPreview.getWidth() + me.buttonPreviewMargin + 'px';
+        me.on('deletefile', me.deletePressed, me);
+    },
+    
+    onDisable: function(){
+        var me = this;
+        
+        me.callParent(arguments);
+        if(me.buttonPreview){
+            me.buttonPreview.setDisabled(true);
         }
+    },
+    
+    onEnable: function(){
+        var me = this;
+
+        me.callParent(arguments);
+        if(me.buttonPreview){
+            me.buttonPreview.setDisabled(!Ext.isEmpty(me.getValue()));
+        }
+    },
+    
+    deletePressed: function(field, pressed){
+        var me = this;
+        if(me.buttonPreview){
+            me.buttonPreview.setDisabled(pressed);
+        }        
     },
     
     createPreviewButton: function(){
@@ -124,13 +161,20 @@ Ext.define('Ext.ux.form.field.ImageFileField', {
                 style = 'style="max-height:100%"';
             }
         }catch(err){}
-        Ext.create('Ext.window.Window', {
+        var win = Ext.create('Ext.window.Window', {
             title:      this.buttonPreviewText,
             height:     400,
             width:      400,
             modal:      true,
             layout:     'fit',
-            html: '<img src="' + this.getImageValue() + '" ' + style + ' />'
+            html: '<img src="' + this.getImageValue() + '" ' + style + ' />',
+            tools: [{
+                type:   'maximize',
+                handler: function(event, toolEl, owner, tool){
+                    win.toggleMaximize();
+                },
+                scope:  win
+            }]
         }).show();
     },
     
