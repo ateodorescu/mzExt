@@ -4,7 +4,7 @@
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @license [MIT][1]
 * 
-* @version 1.3
+* @version 1.4
 * 
 * 
 * Provides plugins for the HtmlEditor. Many thanks to [Shea Frederick][2] as I was inspired by his [work][3].
@@ -16,9 +16,17 @@
 * The plugin buttons have tooltips defined in the {@link #buttonTips} property, but they are not
 * enabled by default unless the global {@link Ext.tip.QuickTipManager} singleton is {@link Ext.tip.QuickTipManager#init initialized}.
 *
-* Changelog:
+* ### Changelog:
 * 
-* 28.08.2012 - v1.3 - Benedikt Elser <boun@gmx.de> - Resurrect the table plugin.
+* #### 28.08.2012 - v1.3
+* 
+* Benedikt Elser <boun@gmx.de> - Resurrect the table plugin.
+* 
+* #### 03.10.2012 - v1.4
+* 
+* - Updated the table insertion to allow strings to be translated to other languages;
+* - New plugins: strikethrough and justify full;
+* - Multiple toolbars
 * 
 * 
 #Example usage:#
@@ -117,15 +125,14 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
     */
     defaultFormatBlock:     'p',
     /**
-    * @cfg {Boolean} enableNewToolbar Should we create a new toolbar or use the existing one?
+    * @cfg {Boolean} enableInsertTable Enable "insert table" plugin which allows inserting tables at the cursor.
     */
-    enableNewToolbar:       false,
-
     enableInsertTable:      false,
-    
-    wordPasteEnabled:       false,
-    toolbar:                null,
-    
+    /**
+    * @cfg {Boolean} enableMultipleToolbars Use this if you want to use multiple toolbars instead of the 
+    * original one full of buttons
+    */
+    enableMultipleToolbars:  true,
     /**
      * @cfg {Array} specialChars
      * An array of additional characters to display for user selection.  Uses numeric portion of the ASCII HTML Character Code only. For example, to use the Copyright symbol, which is &#169; we would just specify <tt>169</tt> (ie: <tt>specialChars:[169]</tt>).
@@ -141,6 +148,9 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
      */
     listFormatBlocks: ["p", "h1", "h2", "h3", "h4", "h5", "h6", "address", "pre"],
     
+    wordPasteEnabled:       false,
+    toolbar:                null,
+    
     constructor: function(config) {
         Ext.apply(this, config);
     },
@@ -149,6 +159,8 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
         var me = this;
         me.editor = editor;
         me.mon(editor, 'initialize', me.onInitialize, me);
+        me.mon(editor, 'sync', me.updateToolbar, me);
+        me.mon(editor, 'editmodechange', me.onEditorModeChanged, me);
     },
     
     onInitialize: function(){
@@ -211,38 +223,39 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
                     Ext.Component.superclass.onEnable.apply(this, arguments);
                 }
             });
-            if(!me.enableNewToolbar){
+            if(!me.enableMultipleToolbars){
                 items.push('-');
             };
             items.push(
-                formatBlockSelectItem
+                formatBlockSelectItem, '-'
             );
         }
-
-        if(me.enableRemoveHtml || me.enableAll){
-            items.push(btn('removehtml', false, me.doRemoveHtml));
+        
+        //insert buttons between original items
+        if(me.editor.enableFormat){
+            me.editor.getToolbar().insert(me.editor.getToolbar().items.indexOfKey('underline')+1, btn('strikethrough'));
         }
-        if(me.enableRemoveFormatting || me.enableAll){
-            items.push(btn('removeformat', false));
+        if(me.editor.enableAlignments){
+            me.editor.getToolbar().insert(me.editor.getToolbar().items.indexOfKey('justifyright')+1, btn('justifyfull'));
         }
+                
         if(me.enableUndoRedo || me.enableAll){
-            items.push('-');
             items.push(btn('undo', false));
             items.push(btn('redo', false));
-        }
-        if(me.enableInsertTable || me.enableAll){
             items.push('-');
-            items.push(btn('inserttable', false, me.doInsertTable));
         }
         if(me.enableIndenting || me.enableAll){
-            items.push('-');
             items.push(btn('indent', false));
             items.push(btn('outdent', false));
+            items.push('-');
         }
         if(me.enableSmallLetters || me.enableAll){
-            items.push('-');
             items.push(btn('superscript'));
             items.push(btn('subscript'));
+            items.push('-');
+        }
+        if(me.enableInsertTable || me.enableAll){
+            items.push(btn('inserttable', false, me.doInsertTable));
         }
         if(me.enableHorizontalRule || me.enableAll){
             items.push(btn('inserthorizontalrule', false));
@@ -256,16 +269,24 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
         }else{
             me.wordPasteEnabled = false;
         }
+        if(me.enableRemoveHtml || me.enableAll){
+            items.push(btn('removehtml', false, me.doRemoveHtml));
+        }
+        if(me.enableRemoveFormatting || me.enableAll){
+            items.push(btn('removeformat', false));
+        }
         
         if(items.length > 0){
-            if(me.enableNewToolbar){
+            if(me.enableMultipleToolbars){
                 //me.tt = me.editor.getToolbar().getEl().wrap({tag: 'div'});
                 me.toolbar = new Ext.Toolbar({
-                    renderTo:           me.editor.getToolbar().getEl(),
+                    renderTo:           Ext.getBody(),
                     border:             false,
                     enableOverflow:     true,
                     cls:                'x-html-editor-tb'
                 });
+                // move new toolbar after the original toolbar
+                me.toolbar.getEl().insertAfter(me.editor.getToolbar().getEl());
                 //me.editor.toolbar = tt;
                 //me.toolbar.removeCls(['x-toolbar', 'x-toolbar-default', 'x-box-layout-ct']);
             }
@@ -293,16 +314,37 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
     },
     
     getToolbar: function(){
-        return this.enableNewToolbar ? this.toolbar : this.editor.getToolbar();
+        return this.enableMultipleToolbars ? this.toolbar : this.editor.getToolbar();
+    },
+    
+    onEditorModeChanged: function(editor, sourceEdit, eOpts){
+        this.disableItems(sourceEdit);
+    },
+
+    disableItems: function(disabled) {
+        var items = this.getToolbar().items.items,
+            i,
+            iLen  = items.length,
+            item;
+
+        for (i = 0; i < iLen; i++) {
+            item = items[i];
+
+            if (item.getItemId() !== 'sourceedit') {
+                item.setDisabled(disabled);
+            }
+        }
     },
     
     onEditorEvent: function(e){
         var me = this,
             diffAt = 0;
         
-        me.updateToolbar();
+        //me.updateToolbar();
         
         me.curLength = me.editor.getValue().length;
+        me.currPos = me.getSelectionNodePos();
+        me.currNode = me.getSelectionNode();
         
         if (e.ctrlKey) {
             var c = e.getCharCode();
@@ -316,6 +358,8 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
         
         me.lastLength = me.editor.getValue().length;
         me.lastValue = me.editor.getValue();
+        me.lastPos = me.getSelectionNodePos();
+        me.lastNode = me.getSelectionNode();
 
     },
     
@@ -327,12 +371,14 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
             return;
         }
         
-        btns = me.getToolbar().items.map;
+        btns = Ext.Object.merge(me.getToolbar().items.map, me.editor.getToolbar().items.map);
         doc = me.editor.getDoc();
         
         function updateButtons() {
             Ext.Array.forEach(Ext.Array.toArray(arguments), function(name) {
-                btns[name].toggle(doc.queryCommandState(name));
+                if(btns[name]){
+                    btns[name].toggle(doc.queryCommandState(name));
+                }
             });
         }
         
@@ -343,6 +389,14 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
         if(me.enableWordPaste || me.enableAll){
             btns['wordpaste'].toggle(me.wordPasteEnabled);
         }
+
+        if(me.editor.enableFormat){
+            updateButtons('strikethrough');
+        }
+
+        if(me.editor.enableAlignments){
+            updateButtons('justifyleft', 'justifycenter', 'justifyright', 'justifyfull');
+        }
         
         if(me.enableFormatBlocks || me.enableAll){
             this.checkSelectionFormatBlock();
@@ -351,72 +405,70 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
     
     doRemoveHtml: function() {
         Ext.defer(function() {
-            var me = this;
+            var me = this, newString;
             me.editor.focus();
             var tmp = document.createElement("DIV");
             tmp.innerHTML = me.editor.getValue();
-            me.editor.setValue(tmp.textContent||tmp.innerText);
+            newString = tmp.textContent||tmp.innerText;
+            newString  = newString.replace(/\n\n/g, "<br />").replace(/.*<!--.*-->/g,"");
+            
+            me.editor.setValue(newString);
         }, 10, this);
     },
 
     doInsertTable: function(){
 		// Table language text
-		var langTitle       = 'Insert Table';
-		var langInsert      = 'Insert';
-		var langCancel      = 'Cancel';
-		var langRows        = 'Rows';
-		var langColumns     = 'Columns';
-		var langBorder      = 'Border';
-		var langCellLabel   = 'Label Cells';
-		var showCellLocationText = false;
+		var me = this, 
+            showCellLocationText = false;
 
-		if (!this.tableWindow){
-		    this.tableWindow = new Ext.Window({
-		        title: langTitle,
-		        closeAction: 'hide',
-		        width: '335px',
+		if (!me.tableWindow){
+		    me.tableWindow = new Ext.Window({
+		        title:          me.buttonTips['table'].title,
+		        closeAction:    'hide',
+                modal:          true,
+		        width:          '335px',
 		        items: [{
-		            itemId: 'insert-table',
-		            xtype: 'form',
-		            border: false,
-		            plain: true,
-		            bodyStyle: 'padding: 10px;',
+		            itemId:     'insert-table',
+		            xtype:      'form',
+		            border:     false,
+		            plain:      true,
+		            bodyStyle:  'padding: 10px;',
 		            labelWidth: '65px',
 		            labelAlign: 'right',
+                    defaults: {
+                        anchor:     '100%'
+                    },
 		            items: [{
-		                xtype: 'numberfield',
-		                allowBlank: false,
-		                allowDecimals: false,
-		                fieldLabel: langRows,
-		                name: 'row',
-		                width: '30px'
+		                xtype:          'numberfield',
+		                allowBlank:     false,
+		                allowDecimals:  false,
+		                fieldLabel:     me.buttonTips['table'].rows,
+		                name:           'row'
 		            }, {
-		                xtype: 'numberfield',
-		                allowBlank: false,
-		                allowDecimals: false,
-		                fieldLabel: langColumns,
-		                name: 'col',
-		                width: '30px'
+		                xtype:          'numberfield',
+		                allowBlank:     false,
+		                allowDecimals:  false,
+		                fieldLabel:     me.buttonTips['table'].columns,
+		                name:           'col'
 		            }, {
-		                xtype: 'combo',
-		                fieldLabel: langBorder,
-		                name: 'border',
+		                xtype:          'combo',
+		                fieldLabel:     me.buttonTips['table'].border,
+		                name:           'border',
 		                forceSelection: true,
-		                mode: 'local',
+		                mode:           'local',
 		                store: new Ext.data.ArrayStore({
-		                    autoDestroy: true,
-		                    fields: ['spec', 'val'],
-		                    data: this.tableBorderOptions
+		                    autoDestroy:    true,
+		                    fields:         ['spec', 'val'],
+		                    data:           me.tableBorderOptions
 		                }),
-		                triggerAction: 'all',
-		                value: 'none',
-		                displayField: 'val',
-		                valueField: 'spec',
-		                anchor: '-15'
+		                triggerAction:  'all',
+		                value:          'none',
+		                displayField:   'val',
+		                valueField:     'spec'
 		            }]
 		        }],
 				buttons: [{
-				    text: langInsert,
+				    text: me.buttonTips['table'].insert,
 				    handler: function(){
 				        var frm = this.tableWindow.getComponent('insert-table').getForm();
 				        if (frm.isValid()) {
@@ -454,7 +506,7 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
 				    },
 				    scope: this
 				}, {
-				    text: langCancel,
+				    text: me.buttonTips['table'].cancel,
 				    handler: function(){
 				        this.tableWindow.hide();
 				    },
@@ -462,6 +514,7 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
 				}]
 		    }).show();
 		} else {
+            this.tableWindow.down('form').getForm().reset();
 			this.tableWindow.show();
 		}
     },
@@ -531,51 +584,64 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
     },
     
     cleanWordPaste: function(){
-        this.editor.suspendEvents();
+        var me = this, selection, range, temp;
         
-        diffAt = this.findValueDiffAt(this.editor.getValue());
-        var parts = [
-            this.editor.getValue().substr(0, diffAt),
-            this.fixWordPaste(this.editor.getValue().substr(diffAt, (this.curLength - this.lastLength))),
-            this.editor.getValue().substr((this.curLength - this.lastLength)+diffAt, this.curLength)
-        ];
-        this.editor.setValue(parts.join(''));
+        me.editor.suspendEvents();
+        selection = me.getSelection();
+        range = me.editor.getDoc().createRange();
+        range.setStart(me.lastNode, me.lastPos);
+        range.setEnd(me.currNode, me.currPos);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        temp = document.createElement("DIV");
+        temp.appendChild(range.cloneContents());
+
+        me.relayCmd('delete');
+        me.editor.insertAtCursor(me.fixWordPaste(temp.innerHTML));
         
-        this.editor.resumeEvents();        
+        me.editor.resumeEvents();        
     },
     
-    findValueDiffAt: function(val){
-        
-        for (i=0;i<this.curLength;i++){
-            if (this.lastValue[i] != val[i]){
-                return i;            
-            }
-        }
+    fixWordPaste: function(wordPaste) {
+        var tmp = document.createElement("DIV");
+        tmp.innerHTML = wordPaste;
+        var newString = tmp.textContent||tmp.innerText;
+        // this next piece converts line breaks into break tags
+        // and removes the seemingly endless crap code
+        newString  = newString.replace(/\n\n/g, "<br />").replace(/.*<!--.*-->/g,"");
+
+        return newString;        
         
     },
 
-    fixWordPaste: function(wordPaste) {
-        var removals = [/&nbsp;/ig, /[\r\n]/g, /<(xml|style)[^>]*>.*?<\/\1>/ig, /<\/?(meta|object|span)[^>]*>/ig,
-            /<\/?[A-Z0-9]*:[A-Z]*[^>]*>/ig, /(lang|class|type|href|name|title|id|clear)=\"[^\"]*\"/ig, /style=(\'\'|\"\")/ig, /<![\[-].*?-*>/g, 
-            /MsoNormal/g, /<\\?\?xml[^>]*>/g, /<\/?o:p[^>]*>/g, /<\/?v:[^>]*>/g, /<\/?o:[^>]*>/g, /<\/?st1:[^>]*>/g, /&nbsp;/g, 
-            /<\/?SPAN[^>]*>/g, /<\/?FONT[^>]*>/g, /<\/?STRONG[^>]*>/g, /<\/?H1[^>]*>/g, /<\/?H2[^>]*>/g, /<\/?H3[^>]*>/g, /<\/?H4[^>]*>/g, 
-            /<\/?H5[^>]*>/g, /<\/?H6[^>]*>/g, /<\/?P[^>]*><\/P>/g, /<!--(.*)-->/g, /<!--(.*)>/g, /<!(.*)-->/g, /<\\?\?xml[^>]*>/g, 
-            /<\/?o:p[^>]*>/g, /<\/?v:[^>]*>/g, /<\/?o:[^>]*>/g, /<\/?st1:[^>]*>/g, /style=\"[^\"]*\"/g, /style=\'[^\"]*\'/g, /lang=\"[^\"]*\"/g, 
-            /lang=\'[^\"]*\'/g, /class=\"[^\"]*\"/g, /class=\'[^\"]*\'/g, /type=\"[^\"]*\"/g, /type=\'[^\"]*\'/g, /href=\'#[^\"]*\'/g, 
-            /href=\"#[^\"]*\"/g, /name=\"[^\"]*\"/g, /name=\'[^\"]*\'/g, / clear=\"all\"/g, /id=\"[^\"]*\"/g, /title=\"[^\"]*\"/g, 
-            /<span[^>]*>/g, /<\/?span[^>]*>/g, /class=/g];
-                    
-        Ext.each(removals, function(s){
-            wordPaste = wordPaste.replace(s, "");
-        });
-        
-        // keep the divs in paragraphs
-        wordPaste = wordPaste.replace(/<div[^>]*>/g, "<p>");
-        wordPaste = wordPaste.replace(/<\/?div[^>]*>/g, "</p>");
-        return wordPaste;
-        
+    getSelection: function(){
+        if (this.editor.getWin().getSelection) {
+            return this.editor.getWin().getSelection();
+        } else if (this.editor.getDoc().getSelection) {
+            return this.editor.getDoc().getSelection();
+        } else if (this.editor.getDoc().selection) {
+            return this.editor.getDoc().selection;
+        }
     },
     
+    getSelectionNode: function(){
+        var currNode;
+        if (this.editor.getWin().getSelection) {
+            currNode = this.editor.getWin().getSelection().focusNode;
+        } else if (this.editor.getDoc().getSelection) {
+            currNode = this.editor.getDoc().getSelection().focusNode;
+        } else if (this.editor.getDoc().selection) {
+            currNode = this.editor.getDoc().selection.createRange().parentElement();
+        }
+        
+        return currNode;
+    },
+    
+    getSelectionNodePos: function(){
+        return this.getSelection().getRangeAt(0).startOffset;
+    },
+
     getSelectedNode: function(){
         try{
             if (this.editor.getWin().getSelection) {
@@ -627,6 +693,7 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
             var me = this;
             me.editor.focus();
             me.editor.execCmd(cmd, value);
+//            me.updateToolbar();
         }, 10, this);
     },
 
@@ -706,6 +773,24 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
             h6:         "Header 6", 
             address:    "Address", 
             pre:        "Formatted"
+        },
+        strikethrough: {
+            title:  'Strikethrough',
+            text:   'Strikethrough the selected text.',
+            cls: Ext.baseCSSPrefix + 'html-editor-tip'
+        },
+        justifyfull: {
+            title:  'Justify text',
+            text:   'Justify the selected text.',
+            cls: Ext.baseCSSPrefix + 'html-editor-tip'
+        },
+        table: {
+            title:      'Insert Table',
+            insert:     'Insert',
+            cancel:     'Cancel',
+            rows:       'Rows',
+            columns:    'Columns',
+            border:     'Border'
         }
     }
     
