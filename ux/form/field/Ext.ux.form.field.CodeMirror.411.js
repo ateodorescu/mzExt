@@ -831,6 +831,7 @@ Ext.define('Ext.ux.form.field.CodeMirror', {
         me.enableLineNumbers = !me.enableLineNumbers;
         me.editor.setOption('lineNumbers', me.enableLineNumbers);
     },
+    
     /**
     * @private
     */

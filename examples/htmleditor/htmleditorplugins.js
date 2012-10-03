@@ -5,7 +5,7 @@ Ext.onReady(function() {
         frame:true,
         title:          'HtmlEditor plugins',
         bodyStyle:      'padding:5px 5px 0',
-        width:          500,
+        //width:          300,
         fieldDefaults: {
             labelAlign:     'top',
             msgTarget:      'side'
@@ -18,7 +18,7 @@ Ext.onReady(function() {
             plugins: [
                 Ext.create('Ext.ux.form.plugin.HtmlEditor',{
                     enableAll:  true
-                    //,enableNewToolbar: true
+                    ,enableMultipleToolbars: true
                 })
             ],
             anchor:         '100%'

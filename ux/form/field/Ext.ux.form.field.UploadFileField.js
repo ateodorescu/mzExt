@@ -13,6 +13,14 @@ Ext.define('Ext.ux.layout.component.field.UploadFileField', {
 
     type: 'uploadfilefield',
 
+    publishInnerWidth: function (ownerContext, width) {
+        var me = this,
+            owner = me.owner;
+        
+        owner.browseButtonWrap.setWidth(owner.buttonEl.getWidth() + owner.buttonMargin + owner.buttonDelete.getWidth() + owner.buttonDeleteMargin);
+        owner.buttonDelete.setHeight(owner.buttonEl.getHeight());
+    },
+    
     sizeBodyContents: function(width, height) {
         var me = this,
             owner = me.owner;
@@ -30,14 +38,21 @@ Ext.define('Ext.ux.layout.component.field.UploadFileField', {
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @license [MIT][1]
 * 
-* @version 1.0
+* @version 1.2
 * 
 * [1]: http://www.mzsolutions.eu/extjs/license.txt
 * 
 * 
 * Provides a "delete" button to the file upload component. If the "delete" button is pressed the component behaves like a 
 * textfield sending the value "delete" to the server. This is useful when you want to delete the uploaded file.
-* The component works with Extjs 4.0.7 and 4.1.0.
+* The component works with Extjs > 4.0.7 and < 4.1.1.
+* 
+* ### Changelog:
+* 
+* #### 03.10.2012 - v1.2
+* 
+* - if the field is readOnly then disable "delete" and "browse" buttons
+* - raise the "deletefile" event when the "delete" button is pressed
 * 
 * 
 #Example usage:#
@@ -61,8 +76,6 @@ Ext.define('Ext.ux.layout.component.field.UploadFileField', {
         }]
     }); 
 
-* @markdown
-* @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 */
 Ext.define('Ext.ux.form.field.UploadFileField', {
     extend: 'Ext.form.field.File',
@@ -70,6 +83,7 @@ Ext.define('Ext.ux.form.field.UploadFileField', {
     alternateClassName: 'Ext.form.UploadFileField',
 
     componentLayout: 'uploadfilefield',
+    
     /**
     * @cfg {String} buttonDeleteText Set the delete button caption.
     */
@@ -78,14 +92,72 @@ Ext.define('Ext.ux.form.field.UploadFileField', {
     * @cfg {String} buttonDeleteMargin Set the margin of the delete button.
     */
     buttonDeleteMargin: 3,
+    readOnly: false,
     
+    initComponent : function(){
+        var me = this;
+        me.readOnlyTemp = me.readOnly || false;
+        
+        me.readOnly = true; // temporarily make it readOnly so that the parent function work properly
+        me.addEvents(
+            /**
+             * @event deletefile
+             * Fires when the delete file button is pressed
+             * @param {Ext.ux.form.field.UploadFileField} this
+             * @param {boolean} pressed
+             */
+            'deletefile'
+        );
+        me.callParent(arguments);
+    },
+
     onRender: function() {
         var me = this;
 
         me.callParent(arguments);
         me.createDeleteButton();
-        if(me.browseButtonWrap){
-            me.browseButtonWrap.dom.style.width = me.buttonEl.getWidth() + me.buttonMargin + me.buttonDelete.getWidth() + me.buttonDeleteMargin + 'px';
+        me.onReadOnly(me.readOnlyTemp);
+    },
+    
+    setReadOnly: function(readOnly){
+        var me = this;
+        
+        me.onReadOnly(readOnly);
+        me.readOnly = readOnly;
+    },
+    
+    onReadOnly: function(readOnly){
+        var me = this;
+
+        if(me.button){
+            me.button.setDisabled(readOnly);
+        }
+        if(me['buttonEl-btnEl']){
+            me['buttonEl-btnEl'].dom.disabled = readOnly;
+        }
+        if(me.fileInputEl){
+            me.fileInputEl.dom.disabled = readOnly;
+        }
+        if(me.buttonDelete){
+            me.buttonDelete.setDisabled(readOnly);
+        }
+    },
+    
+    onDisable: function(){
+        var me = this;
+        
+        me.callParent(arguments);
+        if(me.buttonDelete){
+            me.buttonDelete.setDisabled(true);
+        }
+    },
+    
+    onEnable: function(){
+        var me = this;
+
+        me.callParent(arguments);
+        if(me.buttonDelete){
+            me.buttonDelete.setDisabled(false);
         }
     },
     
@@ -113,8 +185,10 @@ Ext.define('Ext.ux.form.field.UploadFileField', {
         if(pressed){
             me.originalValue = me.getValue();
             me.setValue('delete');
+            me.fireEvent('deletefile', me, true);
         }else{
             me.setValue(me.originalValue);
+            me.fireEvent('deletefile', me, false);
         }
     },
     
