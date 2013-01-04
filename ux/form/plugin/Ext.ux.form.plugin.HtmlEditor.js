@@ -406,13 +406,15 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
     doRemoveHtml: function() {
         Ext.defer(function() {
             var me = this, newString;
-            me.editor.focus();
-            var tmp = document.createElement("DIV");
-            tmp.innerHTML = me.editor.getValue();
-            newString = tmp.textContent||tmp.innerText;
-            newString  = newString.replace(/\n\n/g, "<br />").replace(/.*<!--.*-->/g,"");
-            
-            me.editor.setValue(newString);
+            //if editor is empty this operation should not be execute
+            if (!Ext.isEmpty( me.editor.getValue() )) {
+            	me.editor.focus();
+            	var tmp = document.createElement("DIV");
+            	tmp.innerHTML = me.editor.getValue();
+            	newString = tmp.textContent||tmp.innerText;
+            	newString  = newString.replace(/\n\n/g, "<br />").replace(/.*<!--.*-->/g,"");
+                me.editor.setValue(newString);
+            }    
         }, 10, this);
     },
 
