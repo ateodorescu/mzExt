@@ -15,11 +15,14 @@ Ext.define('Ext.ux.layout.component.field.ImageFileField', {
 
     publishInnerWidth: function (ownerContext, width) {
         var me = this,
-            owner = me.owner;
+            owner = me.owner,
+			btnW = 0, btnH = 0;
         
-        owner.browseButtonWrap.setWidth(owner.buttonEl.getWidth() + owner.buttonMargin + owner.buttonDelete.getWidth() + owner.buttonDeleteMargin + owner.buttonPreview.getWidth() + owner.buttonPreviewMargin);
-        owner.buttonDelete.setHeight(owner.buttonEl.getHeight());
-        owner.buttonPreview.setHeight(owner.buttonEl.getHeight());
+		btnW = (owner.buttonEl ? owner.buttonEl.getWidth() : ( owner.button ? owner.button.el.getWidth() : 0) );
+		btnH = (owner.buttonEl ? owner.buttonEl.getHeight() : ( owner.button ? owner.button.el.getHeight() : 0) );
+        owner.browseButtonWrap.setWidth(btnW + owner.buttonMargin + owner.buttonDelete.getWidth() + owner.buttonDeleteMargin + owner.buttonPreview.getWidth() + owner.buttonPreviewMargin);
+        owner.buttonDelete.setHeight(btnH);
+        owner.buttonPreview.setHeight(btnH);
     },
     
     sizeBodyContents: function(width, height) {
@@ -40,13 +43,13 @@ Ext.define('Ext.ux.layout.component.field.ImageFileField', {
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @license [MIT][1]
 * 
-* @version 1.2
+* @version 1.3
 * 
 * [1]: http://www.mzsolutions.eu/extjs/license.txt
 * 
 * 
 * Provides an image upload field component for Sencha. The field allows you to preview the image that was previously uploaded.
-* The component works with Extjs > 4.0.7 and < 4.1.1.
+* The component works with Extjs > 4.0.7, 4.1.1 and 4.2.x
 * 
 * ### Changelog:
 * 
@@ -55,6 +58,9 @@ Ext.define('Ext.ux.layout.component.field.ImageFileField', {
 * - if the delete button is pressed then disable preview
 * - if the field is readOnly then disable "delete" and "browse" buttons
 * 
+* #### 23.04.2013 - v1.3
+* 
+* - fixed the layout issue to make it work with Ext JS 4.2.x
 * 
 #Example usage:#
 

@@ -1,0 +1,26 @@
+.#{$prefix}grid-group-title {
+    font-size: 12px;
+}
+
+.#{$prefix}grid-group-hd {
+    border-width: 0 0 1px 0 !important;
+}
+
+.#{$prefix}grid-group-dirty {
+    background: url(images/grid/dirty.gif) no-repeat 0 0;
+}
+
+.#{$prefix}grid-summary {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #99bbe8;
+    border-top: 1px solid #99bbe8 !important;
+}
+.#{$prefix}grid-summary-item {
+    border-bottom: none;
+}
+.#{$prefix}grid-summary-wrap {
+    border-width: 0 1px 0 1px;
+    border-style: solid;
+    border-color: #99bbe8;
+}
