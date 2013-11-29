@@ -15,10 +15,13 @@ Ext.define('Ext.ux.layout.component.field.UploadFileField', {
 
     publishInnerWidth: function (ownerContext, width) {
         var me = this,
-            owner = me.owner;
+            owner = me.owner,
+			btnW = 0, btnH = 0;
         
-        owner.browseButtonWrap.setWidth(owner.buttonEl.getWidth() + owner.buttonMargin + owner.buttonDelete.getWidth() + owner.buttonDeleteMargin);
-        owner.buttonDelete.setHeight(owner.buttonEl.getHeight());
+		btnW = (owner.buttonEl ? owner.buttonEl.getWidth() : ( owner.button ? owner.button.el.getWidth() : 0) );
+		btnH = (owner.buttonEl ? owner.buttonEl.getHeight() : ( owner.button ? owner.button.el.getHeight() : 0) );
+        owner.browseButtonWrap.setWidth(btnW + owner.buttonMargin + owner.buttonDelete.getWidth() + owner.buttonDeleteMargin);
+        owner.buttonDelete.setHeight(btnH);
     },
     
     sizeBodyContents: function(width, height) {
@@ -38,14 +41,14 @@ Ext.define('Ext.ux.layout.component.field.UploadFileField', {
 * @docauthor Adrian Teodorescu (ateodorescu@gmail.com; http://www.mzsolutions.eu)
 * @license [MIT][1]
 * 
-* @version 1.2
+* @version 1.3
 * 
 * [1]: http://www.mzsolutions.eu/extjs/license.txt
 * 
 * 
 * Provides a "delete" button to the file upload component. If the "delete" button is pressed the component behaves like a 
 * textfield sending the value "delete" to the server. This is useful when you want to delete the uploaded file.
-* The component works with Extjs > 4.0.7 and < 4.1.1.
+* The component works with Extjs > 4.0.7, 4.1.1 and 4.2.x
 * 
 * ### Changelog:
 * 
@@ -54,6 +57,9 @@ Ext.define('Ext.ux.layout.component.field.UploadFileField', {
 * - if the field is readOnly then disable "delete" and "browse" buttons
 * - raise the "deletefile" event when the "delete" button is pressed
 * 
+* #### 23.04.2013 - v1.3
+* 
+* - fixed the layout issue to make it work with Ext JS 4.2.x
 * 
 #Example usage:#
 
