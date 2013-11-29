@@ -38,3 +38,10 @@ License: MIT
 Demo: "Link":http://ateodorescu.github.com/mzExt/examples/htmleditor/index.html
 Forum: "Link":http://www.sencha.com/forum/showthread.php?183024-Ext.ux.form.plugin.HtmlEditor
 
+h2. Multi level grouping feature and grouping panel plugin for the grid
+
+!http://ateodorescu.github.com/mzExt/images/MultiLevelGrouping.png!
+
+License: MIT
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/multilevelgrouping/index.html
+Forum: "Link":http://www.sencha.com/forum/showthread.php?265814-Multi-level-grouping-summary-and-grand-totals-for-Ext-JS-4.2
