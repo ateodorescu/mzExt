@@ -1,0 +1,56 @@
+.#{$prefix}grouping-panel-ct {
+    background-color: darkgray;
+}
+
+.#{$prefix}grouping-panel-text {
+    color: white;
+    padding: 7px;
+}
+
+.#{$prefix}group-column {
+    background-image: none !important;
+    background-color: transparent !important;
+
+    .#{$prefix}column-header-sort-ASC, 
+    .#{$prefix}column-header-sort-DESC {
+        background-color: transparent !important;
+    }
+}
+
+.#{$prefix}group-column-inner {
+    padding: 3px;
+    height: 21px;
+    border: 1px solid black;
+    margin: 2px;
+    background-color: #f5f5f5;
+    font: normal 11px/13px tahoma,arial,verdana,sans-serif;
+    background-image: -webkit-linear-gradient(top,#f9f9f9,#e3e4e6);
+    background-image: -moz-linear-gradient(top,#f9f9f9,#e3e4e6);
+    background-image: -o-linear-gradient(top,#f9f9f9,#e3e4e6);
+    background-image: linear-gradient(top,#f9f9f9,#e3e4e6);
+}
+
+.#{$prefix}group-column-line {
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+    position: relative;
+    left: -25px;
+    top: -11px;
+    height: 7px;
+    width: 22px;
+}
+
+.#{$prefix}group-column-text {
+    cursor: pointer;    
+}
+
+
+.#{$prefix}group-by-panel-icon{
+    background-image:url(images/grid-grouping/groupbypanel.png)
+}
+.#{$prefix}clear-icon{
+    background-image:url(images/grid-grouping/clear.png)
+}
+.#{$prefix}grid-col-remove-icon .#{$prefix}dd-drop-icon {
+    background-image:url(images/grid-grouping/delete.png)
+}

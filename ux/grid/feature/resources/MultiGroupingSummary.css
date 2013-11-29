@@ -1,0 +1,22 @@
+.x-grid-group-title {
+    font-size: 12px;
+}
+
+.x-grid-group-hd {
+    border-width: 0 0 1px 0 !important;
+}
+
+.x-grid-summary {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #99bbe8;
+    border-top: 1px solid #99bbe8 !important;
+}
+.x-grid-summary-item {
+    border-bottom: none;
+}
+.x-grid-summary-wrap {
+    border-width: 0 1px 0 1px;
+    border-style: solid;
+    border-color: #99bbe8;
+}
