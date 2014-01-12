@@ -1,6 +1,9 @@
+Ext.Loader.setConfig({enabled: true});
+Ext.Loader.setPath('Ext.ux', '../../ux');
+
 Ext.onReady(function() {
     Ext.tip.QuickTipManager.init();
-    
+
     var form = Ext.create('Ext.form.Panel', {
         bodyPadding:    10,
         items: [{
@@ -9,10 +12,9 @@ Ext.onReady(function() {
             anchor:     '100%',
             fieldLabel: 'Name',
             allowBlank: true
-        }, {
-            xtype:      'codemirror',
-            pathModes:  'CodeMirror-2.24/mode',
-            pathExtensions: 'CodeMirror-2.24/lib/util',
+        }, Ext.create('Ext.ux.form.field.CodeMirror', {
+            pathModes:  'CodeMirror-3.20/mode',
+            pathExtensions: 'CodeMirror-3.20/lib/util',
             name:       'f',
             fieldLabel: 'Code',
             anchor:     '100% -20',
@@ -47,7 +49,7 @@ Ext.onReady(function() {
                     }
                 }
             }
-        }],
+        })],
         
         buttons: [{
             text: 'Save',
@@ -60,14 +62,15 @@ Ext.onReady(function() {
     }); 
     
     var win = Ext.create('Ext.window.Window', {
-        title:      'Resize Me',
-        width:      500,
-        height:     400,
-        minWidth:   300,
-        minHeight:  200,
-        layout:     'fit',
-        plain:      true,
-        items:      form
+        title:          'Resize Me',
+        width:          500,
+        height:         400,
+        minWidth:       300,
+        minHeight:      200,
+        layout:         'fit',
+        closeAction:    'destroy',
+        plain:          true,
+        items:          form
 
     });
 
