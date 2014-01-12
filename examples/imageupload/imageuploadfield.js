@@ -1,3 +1,6 @@
+Ext.Loader.setConfig({enabled: true});
+Ext.Loader.setPath('Ext.ux', '../../ux');
+
 Ext.onReady(function() {
     Ext.tip.QuickTipManager.init();
     
@@ -9,14 +12,14 @@ Ext.onReady(function() {
             anchor:     '100%',
             fieldLabel: 'Name',
             allowBlank: true
-        }, {
+        }, Ext.create('Ext.ux.form.field.ImageFileField', {
             xtype:      'imagefield',
             name:       'f',
             fieldLabel: 'Image',
             anchor:     '100%',
 			value:		'hero-extjs4-alt.png',
 			imageRootPath: ''
-        }],
+        })],
         
         buttons: [{
             text: 'Save',

@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Ext.ux.form.field.CodeMirror</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+        <link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext/gpl/4.2.1/resources/css/ext-all-debug.css">
+        <!--<link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext/gpl/4.2.0/resources/css/ext-all-neptune-debug.css">-->
+        <link rel="stylesheet" type="text/css" href="CodeMirror-3.20/lib/codemirror.css">
+
+        <script src="http://cdn.sencha.io/ext/gpl/4.2.1/ext-all-debug.js"></script>
+        <!--<script src="http://cdn.sencha.io/ext/gpl/4.2.0/ext-all-debug.js"></script>-->
+        
+        <script src="CodeMirror-3.20/lib/codemirror.js"></script>
+        
+        <script src="codemirror.js"></script>
+    </head>
+    <body>
+        <h1>CodeMirror example</h1>
+
+        <p>The js is not minified so it is readable. See <a href="codemirror.js" target="_blank">codemirror.js</a>.</p>
+    
+<textarea id="codePhp" style="visibility: hidden;">
+function hello($who) {
+    return "Hello " . $who;
+}
+</textarea>
+
+<textarea id="codeJson" style="visibility: hidden;">
+{
+    hello: 'World'
+}
+</textarea>
+
+<textarea id="codeJs" style="visibility: hidden;">
+function hello(who) {
+    return "Hello " + who;
+}
+</textarea>
+
+
+<textarea id="codeHtml" style="visibility: hidden;">
+<html style="color: green">
+  <!-- this is a comment -->
+  <head>
+    <title>Mixed HTML Example</title>
+    <style type="text/css">
+      h1 {font-family: comic sans; color: #f0f;}
+      div {background: yellow !important;}
+      body {
+        max-width: 50em;
+        margin: 1em 2em 1em 5em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Mixed HTML Example</h1>
+    <script>
+      function jsFunc(arg1, arg2) {
+        if (arg1 && arg2) document.body.innerHTML = "achoo";
+      }
+    </script>
+  </body>
+</html>
+</textarea>
+
+<textarea id="codeCss" style="visibility: hidden;">
+/* Some example CSS */
+
+@import url("something.css");
+
+body {
+  margin: 0;
+  padding: 3em 6em;
+  font-family: tahoma, arial, sans-serif;
+  color: #000;
+}
+
+#navigation a {
+  font-weight: bold;
+  text-decoration: none !important;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 1.7em;
+}
+
+h1:before, h2:before {
+  content: "::";
+}
+
+code {
+  font-family: courier, monospace;
+  font-size: 80%;
+  color: #418A8A;
+}
+</textarea>
+
+    </body>
+</html>
