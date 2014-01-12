@@ -1,17 +1,12 @@
 h1. Plugins and Extensions for Extjs 4.x
 
-h2. Ext.ux.form.field.CodeMirror.411
+h2. Ext.ux.form.field.CodeMirror
 
 !http://ateodorescu.github.com/mzExt/images/Ext.ux.form.field.CodeMirror.png!
 
+Works with ExtJS 4.0.7, 4.1.x and 4.2.x and CodeMirror 3.20.
 License: MIT
-Demo: "Link":http://ateodorescu.github.com/mzExt/examples/codemirror/index_411.html
-Forum: "Link":http://www.sencha.com/forum/showthread.php?167047-Ext.ux.form.field.CodeMirror-for-Ext-4.x
-
-h2. Ext.ux.form.field.CodeMirror.407
-
-License: MIT
-Demo: "Link":http://ateodorescu.github.com/mzExt/examples/codemirror/index_407.html
+Demo: "Link":http://ateodorescu.github.com/mzExt/examples/codemirror/index_42x.html
 Forum: "Link":http://www.sencha.com/forum/showthread.php?167047-Ext.ux.form.field.CodeMirror-for-Ext-4.x
 
 h2. Ext.ux.form.field.UploadFileField
