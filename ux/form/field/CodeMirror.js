@@ -255,6 +255,34 @@ Ext.define('Ext.ux.form.field.CodeMirror', {
     pathModes:          'mode',
 
     /**
+     * @cfg {Boolean} [allowBlank=true]
+     * Specify false to validate that the value's length must be > 0.
+     *
+     */
+    allowBlank : true,
+
+    /**
+     * @cfg {String} blankText
+     * The error text to display if the **{@link #allowBlank}** validation fails
+     */
+    blankText : 'This field is required',
+
+    /**
+     * @cfg {Function} validator
+     * A custom validation function to be called during field validation ({@link #getErrors}).
+     * If specified, this function will be called first, allowing the developer to override the default validation
+     * process.
+     *
+     * This function will be passed the following parameters:
+     *
+     * @cfg {Object} validator.value The current field value
+     * @cfg {Boolean/String} validator.return
+     *
+     * - True if the value is valid
+     * - An error message if the value is invalid
+     */
+
+    /**
     * @cfg {Array} listModes Define here what modes do you want to show in the selection list of the toolbar
     */
     listModes: [{
@@ -433,14 +461,16 @@ Ext.define('Ext.ux.form.field.CodeMirror', {
     * @private override
     */
     getSubTplData: function() {
-        var cssPrefix = Ext.baseCSSPrefix;
+        var me = this,
+            cssPrefix = Ext.baseCSSPrefix;
+            
         return {
-            $comp           : this,
-            cmpId           : this.id,
-            id              : this.getInputId(),
+            $comp           : me,
+            cmpId           : me.id,
+            id              : me.getInputId(),
             toolbarWrapCls  : cssPrefix + 'html-editor-tb',
             textareaCls     : cssPrefix + 'hidden',
-            editorCls       : cssPrefix + 'codemirror ' + this.editorWrapCls,
+            editorCls       : cssPrefix + 'codemirror ' + me.editorWrapCls,
             editorName      : Ext.id(),
             size            : 'height:100px;width:100%'
         };
@@ -972,8 +1002,15 @@ Ext.define('Ext.ux.form.field.CodeMirror', {
     * @return {Mixed} The field value
     */
     getSubmitValue: function(){
-        var me = this;
-        return me.getValue();
+        return this.getValue();
+    },
+    
+    /**
+    * Return raw value to the owner form.
+    * @return {Mixed} The field value
+    */
+    getRawValue: function(){
+        return this.getValue();
     },
 
     /**
@@ -982,11 +1019,61 @@ Ext.define('Ext.ux.form.field.CodeMirror', {
     */
     getValue: function(){
         var me = this;
+        
+        return me.editor ? me.editor.getValue() : null;
+    },
+    
+    /**
+    * Validates the field value according to the field's validation rules and returns an array
+    * of errors for any failing validations. Validation rules are processed in the following order:
+    * 
+    * 1. **Field specific validator**
+    *
+    *     A validator offers a way to customize and reuse a validation specification.
+    *     If a field is configured with a `{@link #validator}`
+    *     function, it will be passed the current field value.  The `{@link #validator}`
+    *     function is expected to return either:
+    *
+    *     - Boolean `true`  if the value is valid (validation continues).
+    *     - a String to represent the invalid message if invalid (validation halts).
+    *
+    * 2. **Basic Validation**
+    *
+    *     If the `{@link #validator}` has not halted validation,
+    *     basic validation proceeds as follows:
+    *
+    *     - `{@link #allowBlank}` : (Invalid message = `{@link #blankText}`)
+    *
+    *         Depending on the configuration of `{@link #allowBlank}`, a
+    *         blank field will cause validation to halt at this step and return
+    *         Boolean true or false accordingly.
+    * 
+    * 
+    */
+    getErrors: function(value) {
+        var me = this,
+            errors = me.callParent(arguments),
+            validator = me.validator,
+            msg, trimmed;
 
-        if(me.editor)
-            return me.editor.getValue();
-        else
-            return null;
+        value = value || me.processRawValue(me.getRawValue());
+
+        if (Ext.isFunction(validator)) {
+            msg = validator.call(me, value);
+            if (msg !== true) {
+                errors.push(msg);
+            }
+        }
+        
+        trimmed = Ext.String.trim(value);
+
+        if (trimmed.length < 1) {
+            if (!me.allowBlank) {
+                errors.push(me.blankText);
+            }
+        }
+
+        return errors;
     },
 
     /**

@@ -16,6 +16,7 @@ Ext.onReady(function() {
             pathModes:  'CodeMirror-3.20/mode',
             pathExtensions: 'CodeMirror-3.20/lib/util',
             name:       'f',
+            allowBlank: false,
             fieldLabel: 'Code',
             anchor:     '100% -20',
             //hideLabel:  true,
