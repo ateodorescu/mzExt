@@ -79,7 +79,7 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
      * @cfg {Array} tableBorderOptions
      * A nested array of value/display options to present to the user for table border style. Defaults to a simple list of 5 varrying border types.
      */
-    tableBorderOptions: [['none', 'None'], ['1px solid #000', 'Sold Thin'], ['2px solid #000', 'Solid Thick'], ['1px dashed #000', 'Dashed'], ['1px dotted #000', 'Dotted']],
+    tableBorderOptions: [['none', 'None'], ['1px solid #000', 'Solid Thin'], ['2px solid #000', 'Solid Thick'], ['1px dashed #000', 'Dashed'], ['1px dotted #000', 'Dotted']],
     /**
     * @cfg {Boolean} enableAll Enable all available plugins
     */
@@ -280,17 +280,23 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
         
         if(items.length > 0){
             if(me.enableMultipleToolbars){
-                //me.tt = me.editor.getToolbar().getEl().wrap({tag: 'div'});
-                me.toolbar = new Ext.Toolbar({
-                    renderTo:           Ext.getBody(),
-                    border:             false,
-                    enableOverflow:     true,
-                    cls:                'x-html-editor-tb'
-                });
-                // move new toolbar after the original toolbar
-                me.toolbar.getEl().insertAfter(me.editor.getToolbar().getEl());
-                //me.editor.toolbar = tt;
-                //me.toolbar.removeCls(['x-toolbar', 'x-toolbar-default', 'x-box-layout-ct']);
+                if(me.editor.items){
+                    // for 4.2.x
+                    me.toolbar = me.editor.items.insert(1, new Ext.Toolbar({
+                        enableOverflow:     true,
+                        cls:                'x-html-editor-tb'
+                    }));
+                    me.editor.updateLayout();
+                }else{
+                    // for 4.1.x
+                    me.toolbar = new Ext.Toolbar({
+                        renderTo:           Ext.getBody(),
+                        border:             false,
+                        enableOverflow:     true,
+                        cls:                'x-html-editor-tb'
+                    });
+                    me.toolbar.getEl().insertAfter(me.editor.getToolbar().getEl());
+                }
             }
             me.getToolbar().add(items);
             
@@ -401,8 +407,9 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
         }
         
         if(me.enableFormatBlocks || me.enableAll){
-            this.checkSelectionFormatBlock();
+            me.checkSelectionFormatBlock();
         }
+        me.editor.deferFocus();
     },
     
     doRemoveHtml: function() {
