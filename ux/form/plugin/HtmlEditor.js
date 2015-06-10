@@ -194,7 +194,7 @@ Ext.define('Ext.ux.form.plugin.HtmlEditor', {
                     caption:    me.buttonTips.listFormatBlocks[me.listFormatBlocks[i]]
                 });
             }
-            formatBlockSelectItem = Ext.widget('component', {
+            var formatBlockSelectItem = Ext.widget('component', {
                 renderTpl: [
                     '<select class="{cls}">',
                         '<tpl for="formats">',
